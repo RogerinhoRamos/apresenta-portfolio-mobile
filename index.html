@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Transforme Planilhas em Sistemas - Rogerinho Ramos</title>
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .mobile-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 2rem 1.5rem 7rem 1.5rem;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            text-align: center;
+            animation: slideInMobile 0.6s ease-out;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes slideInMobile {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Container estilo tela do celular */
+        .phone-container {
+            background: rgba(255,255,255,0.15);
+            padding: 2rem 1.5rem;
+            border-radius: 25px;
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(255,255,255,0.3);
+            max-width: 350px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-container::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 2px;
+        }
+
+        /* Slide 1 - Intro */
+        .intro-slide {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4ecdc4 100%);
+            color: white;
+            animation: gradientMove 6s ease-in-out infinite;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #4ecdc4 100%); }
+            50% { background: linear-gradient(135deg, #4ecdc4 0%, #667eea 50%, #764ba2 100%); }
+        }
+
+        .intro-slide h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            line-height: 1.2;
+            font-weight: 900;
+        }
+
+        .intro-slide .subtitle {
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* Slide 2 - Problem */
+        .problem-slide {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #e55039 100%);
+            color: white;
+            animation: problemGradient 5s ease-in-out infinite;
+        }
+
+        @keyframes problemGradient {
+            0%, 100% { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #e55039 100%); }
+            50% { background: linear-gradient(135deg, #e55039 0%, #ff6b6b 50%, #ee5a24 100%); }
+        }
+
+        .problem-slide h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 900;
+        }
+
+        .problems-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .problem-item {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .problem-item h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .problem-item p {
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        /* Slide 3 - Solution */
+        .solution-slide {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 50%, #2ed573 100%);
+            color: white;
+            animation: solutionGradient 5s ease-in-out infinite;
+        }
+
+        @keyframes solutionGradient {
+            0%, 100% { background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 50%, #2ed573 100%); }
+            50% { background: linear-gradient(135deg, #2ed573 0%, #4ecdc4 50%, #44a08d 100%); }
+        }
+
+        .solution-slide h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 900;
+        }
+
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            width: 100%;
+        }
+
+        .solution-item {
+            background: rgba(255,255,255,0.25);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .solution-item .icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .solution-item h3 {
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+        }
+
+        .solution-item p {
+            font-size: 0.7rem;
+            line-height: 1.3;
+        }
+
+        /* Portfolio slides */
+        .portfolio-slide {
+            color: white;
+        }
+
+        .calendar-slide {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #3498db 100%);
+            animation: calendarGradient 7s ease-in-out infinite;
+        }
+
+        @keyframes calendarGradient {
+            0%, 100% { background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #3498db 100%); }
+            50% { background: linear-gradient(135deg, #3498db 0%, #8e44ad 50%, #9b59b6 100%); }
+        }
+
+        .dashboard-slide {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a6741 100%);
+            animation: dashboardGradient 7s ease-in-out infinite;
+        }
+
+        @keyframes dashboardGradient {
+            0%, 100% { background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a6741 100%); }
+            50% { background: linear-gradient(135deg, #4a6741 0%, #2c3e50 50%, #34495e 100%); }
+        }
+
+        .telegram-slide {
+            background: linear-gradient(135deg, #0088cc 0%, #229ed9 50%, #40a7e3 100%);
+            animation: telegramGradient 7s ease-in-out infinite;
+        }
+
+        @keyframes telegramGradient {
+            0%, 100% { background: linear-gradient(135deg, #0088cc 0%, #229ed9 50%, #40a7e3 100%); }
+            50% { background: linear-gradient(135deg, #40a7e3 0%, #0088cc 50%, #229ed9 100%); }
+        }
+
+        .supply-slide {
+            background: linear-gradient(135deg, #16a085 0%, #1abc9c 50%, #48c9b0 100%);
+            animation: supplyGradient 7s ease-in-out infinite;
+        }
+
+        @keyframes supplyGradient {
+            0%, 100% { background: linear-gradient(135deg, #16a085 0%, #1abc9c 50%, #48c9b0 100%); }
+            50% { background: linear-gradient(135deg, #48c9b0 0%, #16a085 50%, #1abc9c 100%); }
+        }
+
+        .portfolio-slide h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+            font-weight: 800;
+        }
+
+        .demo-image {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            width: 100%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .portfolio-description p {
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+            font-weight: 500;
+        }
+
+        /* CTA slide */
+        .cta-slide {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 25%, #ff1493 50%, #8e44ad 75%, #3742fa 100%);
+            color: white;
+            animation: ctaGradient 4s ease-in-out infinite;
+        }
+
+        @keyframes ctaGradient {
+            0%, 100% { background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 25%, #ff1493 50%, #8e44ad 75%, #3742fa 100%); }
+            25% { background: linear-gradient(135deg, #ffa500 0%, #ff1493 25%, #8e44ad 50%, #3742fa 75%, #ff6b6b 100%); }
+            50% { background: linear-gradient(135deg, #ff1493 0%, #8e44ad 25%, #3742fa 50%, #ff6b6b 75%, #ffa500 100%); }
+            75% { background: linear-gradient(135deg, #8e44ad 0%, #3742fa 25%, #ff6b6b 50%, #ffa500 75%, #ff1493 100%); }
+        }
+
+        .cta-slide h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            font-weight: 900;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            color: #ff1493;
+            padding: 0.9rem 0.8rem;
+            border: 2px solid #fff;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin: 0.3rem 0;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            text-decoration: none;
+            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(255,255,255,0.4);
+            animation: pulse 2s infinite;
+            text-transform: uppercase;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(255,255,255,0.4); }
+            50% { transform: scale(1.03); box-shadow: 0 6px 20px rgba(255,255,255,0.6); }
+        }
+
+        .cta-button:active {
+            transform: scale(0.95);
+            background: linear-gradient(45deg, #ff1493, #ff6b6b);
+            color: white;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-top: 2px solid rgba(255,255,255,0.2);
+            height: 80px;
+            box-sizing: border-box;
+        }
+
+        .nav-btn-mobile {
+            background: rgba(255,255,255,0.25);
+            border: 2px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 1.3rem;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn-mobile:active {
+            background: rgba(255,255,255,0.4);
+            transform: scale(0.9);
+        }
+
+        .slide-info {
+            color: white;
+            font-size: 1rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .progress-bar-mobile {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #667eea, #ffa500);
+            transition: width 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Mobile layouts */
+        .mobile-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .mobile-calendar div {
+            padding: 6px 4px;
+            text-align: center;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .mobile-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .mobile-stat-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 0.8rem;
+            border-radius: 8px;
+            border-left: 3px solid #6c5ce7;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .mobile-stat-card h4 {
+            color: #6c5ce7;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+            font-weight: 800;
+        }
+
+        .mobile-stat-card p {
+            font-size: 0.7rem;
+            color: #495057;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="progress-bar-mobile" id="progressBar"></div>
+
+        <!-- Slide 1: Introdução -->
+        <div class="slide intro-slide active">
+            <div class="phone-container">
+                <h1>🚀 Transforme suas Planilhas em Sistemas</h1>
+                <p class="subtitle">De dados estáticos para soluções dinâmicas e inteligentes</p>
+                <div style="margin-top: 1rem;">
+                    <p style="font-size: 0.9rem; line-height: 1.5; font-weight: 700;">
+                        ✨ Dashboards Interativos<br>
+                        🔗 Integração com APIs<br>
+                        📱 Apps Mobile-Friendly
+                    </p>
+                    <p style="margin-top: 1rem; font-size: 1rem; font-weight: 900;">
+                        <strong>Rogerinho Ramos</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Problemas -->
+        <div class="slide problem-slide">
+            <div class="phone-container">
+                <h2>😤 Problemas das Planilhas</h2>
+                <div class="problems-list">
+                    <div class="problem-item">
+                        <h3>📊 Dados Estáticos</h3>
+                        <p>Informações desatualizadas e sem interatividade</p>
+                    </div>
+                    <div class="problem-item">
+                        <h3>🤝 Falta Colaboração</h3>
+                        <p>Dificuldade para trabalho em equipe</p>
+                    </div>
+                    <div class="problem-item">
+                        <h3>📱 Sem Mobilidade</h3>
+                        <p>Não funciona bem em celulares</p>
+                    </div>
+                    <div class="problem-item">
+                        <h3>🔗 Sem Integração</h3>
+                        <p>Isolado de outros sistemas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Soluções -->
+        <div class="slide solution-slide">
+            <div class="phone-container">
+                <h2>✅ Nossas Soluções</h2>
+                <div class="solutions-grid">
+                    <div class="solution-item">
+                        <div class="icon">📈</div>
+                        <h3>Dashboards Dinâmicos</h3>
+                        <p>Visualizações em tempo real</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="icon">🔔</div>
+                        <h3>Notificações Auto</h3>
+                        <p>Email e Telegram</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="icon">📱</div>
+                        <h3>100% Responsivo</h3>
+                        <p>Qualquer dispositivo</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="icon">🔒</div>
+                        <h3>Controle Acesso</h3>
+                        <p>Usuários e permissões</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="icon">📊</div>
+                        <h3>Relatórios IA</h3>
+                        <p>Análises automáticas</p>
+                    </div>
+                    <div class="solution-item">
+                        <div class="icon">🔗</div>
+                        <h3>Integrações</h3>
+                        <p>APIs e sistemas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Calendário de Férias -->
+        <div class="slide portfolio-slide calendar-slide">
+            <div class="phone-container">
+                <h2>📅 Sistema Gestão de Férias</h2>
+                <div class="demo-image">
+                    <div style="color: #333; text-align: center;">
+                        <h3 style="color: #4285f4; margin-bottom: 0.8rem; font-size: 0.9rem; font-weight: 800;">Calendário Interativo</h3>
+                        <div class="mobile-calendar">
+                            <div style="background: #4285f4; color: white; font-weight: 700;">D</div>
+                            <div style="background: #4285f4; color: white; font-weight: 700;">S</div>
+                            <div style="background: #4285f4; color: white; font-weight: 700;">T</div>
+                            <div style="background: #4285f4; color: white; font-weight: 700;">Q</div>
+                            <div style="background: #4285f4; color: white; font-weight: 700;">Q</div>
+                            <div style="background: #4285f4; color: white; font-weight: 700;">S</div>
+                            <div style="background: #4285f4; color: white; font-weight: 700;">S</div>
+                            <div style="color: #666; font-weight: 600;">1</div>
+                            <div style="background: #e8f0fe; color: #1565c0; font-weight: 600; font-size: 0.6rem;">2<br>João</div>
+                            <div style="background: #e8f0fe; color: #1565c0; font-weight: 600; font-size: 0.6rem;">3<br>Maria</div>
+                            <div style="color: #666; font-weight: 600;">4</div>
+                            <div style="color: #666; font-weight: 600;">5</div>
+                            <div style="color: #666; font-weight: 600;">6</div>
+                            <div style="color: #666; font-weight: 600;">7</div>
+                        </div>
+                        <p style="margin-top: 0.8rem; color: #666; font-size: 0.7rem; font-weight: 600;">✅ Turno A | ✅ Turno B | 📊 Programação</p>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>🎯 Transformação:</strong> Planilha manual → Sistema automatizado</p>
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>✨ Recursos:</strong> Calendário interativo, turnos, previsões</p>
+                    <p style="font-size: 0.75rem; line-height: 1.3;"><strong>📊 Resultado:</strong> 80% menos tempo de planejamento</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Dashboard Performance -->
+        <div class="slide portfolio-slide dashboard-slide">
+            <div class="phone-container">
+                <h2>📊 Dashboard Performance</h2>
+                <div class="demo-image">
+                    <div style="color: #333; text-align: center;">
+                        <h3 style="color: #6c5ce7; margin-bottom: 0.8rem; font-size: 0.9rem; font-weight: 800;">Análise de Performance</h3>
+                        <div class="mobile-stats">
+                            <div class="mobile-stat-card">
+                                <h4>81.5%</h4>
+                                <p>Média Geral</p>
+                            </div>
+                            <div class="mobile-stat-card" style="border-left-color: #00b894;">
+                                <h4 style="color: #00b894;">Horário</h4>
+                                <p>Melhor Área</p>
+                            </div>
+                            <div class="mobile-stat-card" style="border-left-color: #fdcb6e;">
+                                <h4 style="color: #fdcb6e;">Crescimento</h4>
+                                <p>Para Melhorar</p>
+                            </div>
+                            <div class="mobile-stat-card" style="border-left-color: #e17055;">
+                                <h4 style="color: #e17055;">26</h4>
+                                <p>Avaliações</p>
+                            </div>
+                        </div>
+                        <p style="color: #666; font-size: 0.7rem; font-weight: 600;">📊 Gráficos Radar • 📈 Comparativos • ⚡ Tempo Real</p>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>🎯 Transformação:</strong> Gráficos estáticos → Dashboard interativo</p>
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>✨ Recursos:</strong> Análise radar, comparativos setoriais</p>
+                    <p style="font-size: 0.75rem; line-height: 1.3;"><strong>📈 Resultado:</strong> Visibilidade 360° da performance</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Sistema Telegram -->
+        <div class="slide portfolio-slide telegram-slide">
+            <div class="phone-container">
+                <h2>🍽️ Sistema Telegram</h2>
+                <div class="demo-image">
+                    <div style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); padding: 1rem; border-radius: 10px; color: white;">
+                        <h3 style="color: #f39c12; margin-bottom: 0.8rem; font-size: 0.8rem; font-weight: 800;">🤖 Bot Automatizado</h3>
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem; font-size: 0.65rem; border-left: 3px solid #2ecc71;">
+                            <p style="font-weight: 700;">✅ PEDIDO CONFIRMADO</p>
+                            <p>📅 07/05/2025 às 18:30</p>
+                            <p>🏢 Logística | 👥 Qtd: 1</p>
+                            <p style="color: #2ecc71;">✅ Status: Confirmado</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; font-size: 0.65rem; border-left: 3px solid #e74c3c;">
+                            <p style="font-weight: 700;">❌ PEDIDO CANCELADO</p>
+                            <p>📅 Cancelado para 07/05/2025</p>
+                            <p>🏢 Setor: Manutenção</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>🎯 Transformação:</strong> Pedidos manuais → Bot automatizado</p>
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>✨ Recursos:</strong> Interface mobile, notificações Telegram</p>
+                    <p style="font-size: 0.75rem; line-height: 1.3;"><strong>📱 Resultado:</strong> 100% digital e integrado</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Supply Optimizer -->
+        <div class="slide portfolio-slide supply-slide">
+            <div class="phone-container">
+                <h2>📦 Supply Optimizer</h2>
+                <div class="demo-image">
+                    <div style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); padding: 1rem; border-radius: 10px; color: white;">
+                        <h3 style="color: #3498db; margin-bottom: 0.8rem; font-size: 0.8rem; font-weight: 800;">🤖 IA Integrada</h3>
+                        <div style="background: rgba(255,255,255,0.15); padding: 0.8rem; border-radius: 8px; margin-bottom: 0.6rem; text-align: center;">
+                            <h4 style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.2rem;">🔍 Busca Inteligente</h4>
+                            <p style="font-size: 0.6rem; opacity: 0.9;">Código, local, descrição automática</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.15); padding: 0.8rem; border-radius: 8px; text-align: center;">
+                            <h4 style="font-size: 0.75rem; font-weight: 700; margin-bottom: 0.2rem;">📊 Análise Preditiva</h4>
+                            <p style="font-size: 0.6rem; opacity: 0.9;">Demanda automática por IA</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>🎯 Transformação:</strong> Controle planilhas → IA integrada</p>
+                    <p style="font-size: 0.75rem; margin-bottom: 0.5rem; line-height: 1.3;"><strong>✨ Recursos:</strong> Análise preditiva, otimização automática</p>
+                    <p style="font-size: 0.75rem; line-height: 1.3;"><strong>🤖 Resultado:</strong> 90% menos trabalho manual</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Call to Action -->
+        <div class="slide cta-slide">
+            <div class="phone-container">
+                <h2>🔥 HORA DE AGIR!</h2>
+                <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.4); font-weight: 900;">⚡ Não perca mais tempo com planilhas!</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 1rem; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);">
+                    Clique em qualquer botão abaixo e vamos conversar AGORA! 👇
+                </p>
+                <div style="background: rgba(255,255,255,0.25); padding: 0.8rem; border-radius: 10px; margin-bottom: 1rem; border: 2px solid rgba(255,255,255,0.4);">
+                    <p style="font-size: 0.8rem; font-weight: 600; line-height: 1.3;">
+                        ✅ Sistema pronto em 48h<br>
+                        ✅ Suporte técnico incluído<br>
+                        ✅ Integrações Telegram/Email<br>
+                        ✅ Orçamento 100% gratuito
+                    </p>
+                </div>
+                <a href="mailto:rogerinho.invest02@gmail.com" class="cta-button">
+                    📧 Enviar Email Agora
+                </a>
+                <a href="https://t.me/Rogerinho_Ramos" class="cta-button">
+                    💬 Telegram Direto
+                </a>
+                <a href="https://www.linkedin.com/in/rogério-costa-ramos-0aa0aa26" class="cta-button">
+                    💼 Conectar LinkedIn
+                </a>
+                <a href="https://www.youtube.com/@rogerinhoramos" class="cta-button">
+                    🎥 Ver Mais Projetos
+                </a>
+                <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(0,0,0,0.3); border-radius: 10px; border: 2px solid rgba(255,255,255,0.3);">
+                    <p style="font-size: 0.8rem; font-weight: 700; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">
+                        🚀 <strong>Rogerinho Ramos</strong><br>
+                        Transformando dados em soluções desde 2020<br>
+                        ⭐ +50 projetos entregues com sucesso
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-nav">
+        <button class="nav-btn-mobile" onclick="previousSlide()">⬅️</button>
+        <div class="slide-info" id="slideInfo">1 / 8</div>
+        <button class="nav-btn-mobile" id="playBtn" onclick="toggleAutoPlay()">▶️</button>
+        <button class="nav-btn-mobile" onclick="nextSlide()">➡️</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let autoAdvanceInterval;
+        let isAutoPlaying = false;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let startX = 0;
+        let startY = 0;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('slideInfo').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function startAutoPlay() {
+            if (!isAutoPlaying) {
+                isAutoPlaying = true;
+                autoAdvanceInterval = setInterval(() => {
+                    if (currentSlide === totalSlides - 1) {
+                        clearInterval(autoAdvanceInterval);
+                        setTimeout(() => {
+                            if (isAutoPlaying) {
+                                nextSlide();
+                                startAutoPlay();
+                            }
+                        }, 10000);
+                    } else {
+                        nextSlide();
+                    }
+                }, 5000);
+                document.getElementById('playBtn').textContent = '⏸️';
+            }
+        }
+
+        function stopAutoPlay() {
+            if (isAutoPlaying) {
+                isAutoPlaying = false;
+                clearInterval(autoAdvanceInterval);
+                document.getElementById('playBtn').textContent = '▶️';
+            }
+        }
+
+        function toggleAutoPlay() {
+            if (isAutoPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        }
+
+        // Touch gestures
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!startX || !startY) {
+                return;
+            }
+
+            let endX = e.changedTouches[0].clientX;
+            let endY = e.changedTouches[0].clientY;
+
+            let diffX = startX - endX;
+            let diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        nextSlide();
+                    } else {
+                        previousSlide();
+                    }
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'p' || e.key === 'P') {
+                toggleAutoPlay();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+        setTimeout(startAutoPlay, 3000);
+    </script>
+</body>
+</html>
